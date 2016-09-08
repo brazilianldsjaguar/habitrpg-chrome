@@ -157,7 +157,7 @@ var SiteWatcher = (function() {
                 this.addScoreFromSpentTime(this.getandResetSpentTime());
         },
 
-        getHost: function(url) { 
+        getHost: function(url) {
             var domain = url.replace(/https?:\/\/w{0,3}\.?([\w.\-]+).*/, '$1');
             var split = domain.split('.');
             if(split.length >= 3) {
@@ -167,6 +167,50 @@ var SiteWatcher = (function() {
                 return split[split.length-2] + '.' +split[split.length-1];
             }
             return domain;
+
+            var badArray = [
+            	['google', 'co', 'uk'],
+            	['facebook', 'com']
+            ];
+
+            var goodArray = [
+            	['google', 'com', 'br'],
+            	['developers', 'facebook', 'com']
+            ];
+
+            var currentUrl = [
+            	'www', 'facebook', 'com'
+            ];
+
+            function isArraySame(array, otherArray) {
+
+            	// Check if both arrays share the same length AND values of each index are identical
+            	let isSame = array.length === otherArray.length && array.every((urlBit, index) => {
+            		return urlBit === otherArray[index];
+            	});
+
+            	// Just a bool
+            	return isSame;
+            }
+
+            function isGoodOrBad() {
+            	var state;
+
+            	goodArray.forEach(urlArray => {
+            		if (isArraySame(currentUrl, urlArray)) state = 1;
+            	});
+
+            	badArray.forEach(urlArray => {
+            		if (isArraySame(currentUrl, urlArray)) state = -1;
+            	});
+
+            	if (state === undefined) function();
+
+            	return state;
+            }
+
+            console.log(isGoodOrBad());
+
         },
 
         checkNewUrl: function(url) {
@@ -346,4 +390,3 @@ var SiteWatcher = (function() {
     };
 
 })();
-
